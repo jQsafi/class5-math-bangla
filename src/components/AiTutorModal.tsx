@@ -158,7 +158,7 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
                   <div className='flex items-center gap-2'>
                     <h3 className='font-bold text-base text-white'>গণিত বন্ধু</h3>
                     <span className='text-[10px] bg-emerald-500/80 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold'>
-                      Groq AI
+                      স্মার্ট এআই
                     </span>
                   </div>
                   <p className='text-xs text-emerald-100/80'>
@@ -179,7 +179,7 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
                 </button>
                 <button
                   onClick={handleOpenSettings}
-                  title='Groq API Key কনফিগারেশন'
+                  title='এআই সেটিংস'
                   className='p-2 hover:bg-white/10 rounded-xl text-emerald-100 transition-colors'
                 >
                   <Key className='w-4 h-4' />
@@ -201,7 +201,7 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
               >
                 <div className='flex items-center gap-2'>
                   <AlertCircle className='w-4 h-4 text-amber-600 shrink-0' />
-                  <span>AI সক্রিয় করতে আপনার Groq API Key যুক্ত করুন।</span>
+                  <span>AI সক্রিয় করতে আপনার API Key যুক্ত করুন।</span>
                 </div>
                 <span className='font-bold underline text-amber-800'>যুক্ত করুন</span>
               </div>
@@ -326,7 +326,7 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
                   <Key className='w-4 h-4' />
                 </div>
                 <h3 className='font-bold text-slate-900 text-base'>
-                  Groq API Key কনফিগারেশন
+                  এআই সেটিংস ও কনফিগারেশন
                 </h3>
               </div>
               <button
@@ -338,13 +338,13 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
             </div>
 
             <p className='text-xs text-slate-600 leading-relaxed'>
-              Groq AI অত্যন্ত দ্রুতগতিতে সমাধান প্রদান করে। আপনার বিনামূল্যে Groq API Key যুক্ত করলে যেকোনো ডিভাইস থেকে এআই গণিত শিক্ষক ব্যবহার করা যাবে।
+              স্মার্ট এআই অত্যন্ত দ্রুতগতিতে সমাধান ও বিস্তারিত গণিত সহায়তা প্রদান করে। কাস্টম API Key ব্যবহার করতে চাইলে নিচে যুক্ত করতে পারো।
             </p>
 
             <form onSubmit={handleSaveApiKey} className='space-y-4'>
               <div>
                 <label className='block text-xs font-bold text-slate-700 mb-1.5'>
-                  Groq API Key
+                  কাস্টম API Key (ঐচ্ছিক)
                 </label>
                 <input
                   type='password'
@@ -356,16 +356,7 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
               </div>
 
               <div className='p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-900 leading-relaxed'>
-                💡 আপনার কাছে কি Groq কী নেই?{' '}
-                <a
-                  href='https://console.groq.com/keys'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='text-emerald-700 font-bold underline'
-                >
-                  console.groq.com/keys
-                </a>{' '}
-                থেকে সম্পূর্ণ বিনামূল্যে ১ মিনিটে একটি কী তৈরি করে নিন।
+                💡 শিক্ষার্থীদের জন্য প্ল্যাটফর্মে বিল্ট-ইন স্মার্ট এআই ইতিমধ্যে সক্রিয় রয়েছে।
               </div>
 
               {keySavedMessage && (

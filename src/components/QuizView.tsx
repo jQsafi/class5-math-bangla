@@ -180,7 +180,7 @@ export const QuizView: React.FC<QuizViewProps> = ({ questions, chapterTitle }) =
         <div className='py-12 text-center space-y-3'>
           <span className='animate-spin inline-block w-8 h-8 border-3 border-emerald-600 border-t-transparent rounded-full'></span>
           <div className='text-sm font-bold text-slate-700'>
-            Groq AI {difficulty} মানের ৩টি কুইজ প্রশ্ন তৈরি করছে...
+            এআই {difficulty} মানের ৩টি কুইজ প্রশ্ন তৈরি করছে...
           </div>
         </div>
       )}

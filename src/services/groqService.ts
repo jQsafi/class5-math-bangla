@@ -59,11 +59,11 @@ const SYSTEM_TUTOR_PROMPT = `তুমি একজন অত্যন্ত স
 export const callGroqChat = async (
   messages: ChatMessage[],
   temperature = 0.6,
-  model = 'llama-3.3-70b-versatile'
+  model = 'openai/gpt-oss-120b'
 ): Promise<string> => {
   const apiKey = getGroqApiKey();
   if (!apiKey) {
-    throw new Error('দয়া করে প্রথমে আপনার Groq API Key যুক্ত করুন।');
+    throw new Error('দয়া করে প্রথমে আপনার এআই API Key যুক্ত করুন।');
   }
 
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -82,7 +82,7 @@ export const callGroqChat = async (
 
   if (!response.ok) {
     const errData = await response.json().catch(() => ({}));
-    const message = errData?.error?.message || `Groq API Error: ${response.status} ${response.statusText}`;
+    const message = errData?.error?.message || `AI Service Error: ${response.status} ${response.statusText}`;
     throw new Error(message);
   }
 
@@ -105,13 +105,9 @@ export const askMathTutor = async (
   ];
 
   try {
-    return await callGroqChat(fullMessages, 0.6, 'llama-3.3-70b-versatile');
+    return await callGroqChat(fullMessages, 0.6, 'openai/gpt-oss-120b');
   } catch (err: any) {
-    // Fallback to llama-3.1-8b-instant if the versatile model has rate limit issues
-    if (err?.message && (err.message.includes('rate') || err.message.includes('capacity'))) {
-      return await callGroqChat(fullMessages, 0.6, 'llama-3.1-8b-instant');
-    }
-    throw err;
+    return await callGroqChat(fullMessages, 0.6, 'qwen/qwen3.8-27b');
   }
 };
 
@@ -147,7 +143,7 @@ export const generateAiExercise = async (
     { role: 'user', content: prompt },
   ];
 
-  const raw = await callGroqChat(messages, 0.5, 'llama-3.3-70b-versatile');
+  const raw = await callGroqChat(messages, 0.4, 'openai/gpt-oss-120b');
   
   // Extract JSON from response
   let cleaned = raw.trim();
@@ -214,7 +210,7 @@ export const generateAiQuiz = async (
     { role: 'user', content: prompt }
   ];
 
-  const raw = await callGroqChat(messages, 0.4, 'llama-3.3-70b-versatile');
+  const raw = await callGroqChat(messages, 0.4, 'openai/gpt-oss-120b');
   let cleaned = raw.trim();
   if (cleaned.startsWith('```json')) {
     cleaned = cleaned.replace(/^```json/, '').replace(/```$/, '').trim();
@@ -260,7 +256,7 @@ export const generatePracticeProblem = async (
     { role: 'user', content: prompt }
   ];
 
-  const raw = await callGroqChat(messages, 0.5, 'llama-3.3-70b-versatile');
+  const raw = await callGroqChat(messages, 0.4, 'openai/gpt-oss-120b');
   let cleaned = raw.trim();
   if (cleaned.startsWith('```json')) {
     cleaned = cleaned.replace(/^```json/, '').replace(/```$/, '').trim();

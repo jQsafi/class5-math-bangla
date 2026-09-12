@@ -78,7 +78,7 @@ export const PracticePage: React.FC = () => {
       <div className='text-center space-y-2'>
         <div className='inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold'>
           <Sparkles className='w-4 h-4 text-emerald-600' />
-          <span>Groq AI চালিত অনুশীলন ল্যাব</span>
+          <span>স্মার্ট এআই অনুশীলন ল্যাব</span>
         </div>
         <h1 className='text-2xl md:text-4xl font-black text-slate-900'>
           গতিশীল গণিত অনুশীলন ড্রিল

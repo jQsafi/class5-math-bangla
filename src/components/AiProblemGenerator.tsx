@@ -41,7 +41,7 @@ export const AiProblemGenerator: React.FC<AiProblemGeneratorProps> = ({
       if (onOpenKeySettings) {
         onOpenKeySettings();
       } else {
-        setErrorMsg('অনুগ্রহ করে প্রথমে আপনার Groq API Key যুক্ত করুন।');
+        setErrorMsg('অনুগ্রহ করে প্রথমে আপনার API Key যুক্ত করুন।');
       }
       return;
     }
@@ -86,7 +86,7 @@ export const AiProblemGenerator: React.FC<AiProblemGeneratorProps> = ({
         <div>
           <div className='inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold mb-2'>
             <Sparkles className='w-3.5 h-3.5 text-emerald-600' />
-            <span>Groq AI চালিত জেনারেটর</span>
+            <span>স্মার্ট এআই জেনারেটর</span>
           </div>
           <h3 className='text-xl md:text-2xl font-bold text-slate-900'>
             অধ্যায়ভিত্তিক নতুন অনুশীলন প্রশ্ন তৈরি করো
@@ -130,7 +130,7 @@ export const AiProblemGenerator: React.FC<AiProblemGeneratorProps> = ({
         <div className='p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-between gap-3 text-xs text-amber-900'>
           <div className='flex items-center gap-2'>
             <Key className='w-4 h-4 text-amber-600 shrink-0' />
-            <span>AI সমস্যা তৈরি করার জন্য আপনার Groq API Key প্রয়োজন।</span>
+            <span>AI সমস্যা তৈরি করার জন্য API Key প্রয়োজন।</span>
           </div>
           {onOpenKeySettings && (
             <button
