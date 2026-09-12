@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ExerciseProblem } from '../types/math';
-import { Lightbulb, CheckCircle2, ChevronDown, ChevronUp, Volume2, BookOpen } from 'lucide-react';
-import { speakBengaliText, englishToBanglaDigits } from '../utils/banglaUtils';
+import { Lightbulb, CheckCircle2, ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
+import { englishToBanglaDigits } from '../utils/banglaUtils';
 
 interface SolutionCardProps {
   problem: ExerciseProblem;
@@ -40,13 +40,6 @@ export const SolutionCard: React.FC<SolutionCardProps> = ({ problem, index }) =>
             </span>
           )}
         </div>
-        <button
-          onClick={() => speakBengaliText(problem.question)}
-          title='প্রশ্নটি বাংলায় শুনে নাও'
-          className='p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors'
-        >
-          <Volume2 className='w-4 h-4' />
-        </button>
       </div>
 
       <div className='my-4 text-slate-800 text-base md:text-lg font-medium leading-relaxed'>

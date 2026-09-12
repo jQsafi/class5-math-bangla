@@ -5,15 +5,14 @@ import {
   CheckCircle2,
   AlertCircle,
   Lightbulb,
-  Key,
-  Volume2
+  Key
 } from 'lucide-react';
 import {
   generateAiExercise,
   GeneratedExercise,
   hasGroqApiKey
 } from '../services/groqService';
-import { englishToBanglaDigits, speakBengaliText } from '../utils/banglaUtils';
+import { englishToBanglaDigits } from '../utils/banglaUtils';
 
 interface AiProblemGeneratorProps {
   chapterTitle: string;
@@ -26,7 +25,7 @@ export const AiProblemGenerator: React.FC<AiProblemGeneratorProps> = ({
   chapterSummary,
   onOpenKeySettings,
 }) => {
-  const [difficulty, setDifficulty] = useState<'সহজ' | 'মধ্যম' | 'চ্যালেঞ্জিং'>('সহজ');
+  const [difficulty, setDifficulty] = useState<'সহজ' | 'কঠিন' | 'এক্সপার্ট'>('সহজ');
   const [exercise, setExercise] = useState<GeneratedExercise | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -100,7 +99,7 @@ export const AiProblemGenerator: React.FC<AiProblemGeneratorProps> = ({
         {/* Difficulty & Generator Controls */}
         <div className='flex items-center gap-2'>
           <div className='inline-flex bg-slate-100 p-1 rounded-2xl'>
-            {(['সহজ', 'মধ্যম', 'চ্যালেঞ্জিং'] as const).map((diff) => (
+            {(['সহজ', 'কঠিন', 'এক্সপার্ট'] as const).map((diff) => (
               <button
                 key={diff}
                 onClick={() => setDifficulty(diff)}
@@ -161,13 +160,6 @@ export const AiProblemGenerator: React.FC<AiProblemGeneratorProps> = ({
               <span className='px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800'>
                 {difficulty} মানের প্রশ্ন
               </span>
-              <button
-                onClick={() => speakBengaliText(exercise.question)}
-                title='প্রশ্নটি শোনো'
-                className='flex items-center gap-1 text-xs text-emerald-700 font-semibold hover:bg-emerald-100/50 p-1.5 rounded-lg transition-colors'
-              >
-                <Volume2 className='w-4 h-4' /> শোনো
-              </button>
             </div>
 
             <div className='text-base md:text-lg font-bold text-slate-900 leading-relaxed'>

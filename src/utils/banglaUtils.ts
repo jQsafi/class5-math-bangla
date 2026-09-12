@@ -16,13 +16,3 @@ export const banglaToEnglishDigits = (str: string): string => {
 export const normalizeMathInput = (input: string): string => {
   return banglaToEnglishDigits(input).trim().toLowerCase().replace(/s+/g, '');
 };
-
-export const speakBengaliText = (text: string) => {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'bn-BD';
-    utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
-  }
-};

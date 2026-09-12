@@ -6,7 +6,6 @@ import {
   Bot,
   User,
   Key,
-  Volume2,
   AlertCircle,
   HelpCircle,
   RotateCcw,
@@ -19,7 +18,6 @@ import {
   setGroqApiKey,
   hasGroqApiKey
 } from '../services/groqService';
-import { speakBengaliText } from '../utils/banglaUtils';
 
 interface AiTutorModalProps {
   currentChapterTitle?: string;
@@ -236,13 +234,6 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
                     {msg.role === 'assistant' && (
                       <div className='mt-2 pt-2 border-t border-slate-100 flex items-center justify-between'>
                         <span className='text-[10px] text-slate-400'>NCTB গণিত শিক্ষক</span>
-                        <button
-                          onClick={() => speakBengaliText(msg.content)}
-                          title='উচ্চৈঃস্বরে শোনো'
-                          className='p-1 hover:bg-emerald-50 rounded-lg text-emerald-600 transition-colors flex items-center gap-1 text-[11px] font-medium'
-                        >
-                          <Volume2 className='w-3.5 h-3.5' /> শোনো
-                        </button>
                       </div>
                     )}
                   </div>
