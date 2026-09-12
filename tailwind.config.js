@@ -7,7 +7,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        bangla: ['"Hind Siliguri"', '"Kalpurush"', 'sans-serif'],
+        sans: ['"Noto Sans Bengali"', '"Hind Siliguri"', '"Kalpurush"', 'system-ui', 'sans-serif'],
+        bangla: ['"Noto Sans Bengali"', '"Hind Siliguri"', '"Kalpurush"', 'system-ui', 'sans-serif'],
+        mono: ['"Noto Sans Bengali"', '"Hind Siliguri"', 'ui-monospace', 'monospace'],
       },
       colors: {
         brand: {

@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 @layer base {
-  body {
+  html, body {
     @apply font-bangla antialiased text-slate-800 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-blue-50/20 min-h-screen;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
 }
 

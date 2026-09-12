@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ExerciseProblem } from '../types/math';
 import { Lightbulb, CheckCircle2, ChevronDown, ChevronUp, Volume2, BookOpen } from 'lucide-react';
-import { speakBengaliText } from '../utils/banglaUtils';
+import { speakBengaliText, englishToBanglaDigits } from '../utils/banglaUtils';
 
 interface SolutionCardProps {
   problem: ExerciseProblem;
@@ -121,7 +121,7 @@ export const SolutionCard: React.FC<SolutionCardProps> = ({ problem, index }) =>
             {problem.steps.map((step, sIdx) => (
               <div key={sIdx} className='flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs md:text-sm text-slate-700'>
                 <span className='flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs shrink-0 mt-0.5'>
-                  {step.stepNumber}
+                  {englishToBanglaDigits(step.stepNumber)}
                 </span>
                 <div className='flex-1 space-y-1'>
                   <p className='text-slate-800 font-medium'>{step.explanation}</p>

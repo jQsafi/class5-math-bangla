@@ -134,7 +134,7 @@ export const ChapterPage: React.FC<ChapterPageProps> = ({
               <div className='space-y-2 pt-2'>
                 {ex.steps.map((st, sIdx) => (
                   <div key={sIdx} className='p-3 bg-slate-50 rounded-xl text-xs md:text-sm text-slate-700 flex items-start gap-2'>
-                    <span className='w-5 h-5 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs shrink-0'>{st.stepNumber}</span>
+                    <span className='w-5 h-5 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs shrink-0'>{englishToBanglaDigits(st.stepNumber)}</span>
                     <div>
                       <div>{st.explanation}</div>
                       {st.mathExpression && <div className='font-mono font-bold text-blue-900 mt-1'>{st.mathExpression}</div>}
