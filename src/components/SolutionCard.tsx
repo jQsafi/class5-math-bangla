@@ -1,0 +1,151 @@
+import React, { useState } from 'react';
+import { ExerciseProblem } from '../types/math';
+import { Lightbulb, CheckCircle2, ChevronDown, ChevronUp, Volume2, BookOpen } from 'lucide-react';
+import { speakBengaliText } from '../utils/banglaUtils';
+
+interface SolutionCardProps {
+  problem: ExerciseProblem;
+  index: number;
+}
+
+export const SolutionCard: React.FC<SolutionCardProps> = ({ problem, index }) => {
+  const [showHint, setShowHint] = useState(false);
+  const [showSolution, setShowSolution] = useState(false);
+  const [userAttempt, setUserAttempt] = useState('');
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+  const handleCheckAnswer = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userAttempt.trim()) return;
+    const cleanUser = userAttempt.replace(/\s+/g, '');
+    const cleanAns = problem.finalAnswer.replace(/\s+/g, '');
+    if (cleanUser === cleanAns || cleanAns.includes(cleanUser)) {
+      setIsCorrect(true);
+      setShowSolution(true);
+    } else {
+      setIsCorrect(false);
+    }
+  };
+
+  return (
+    <div className='bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all p-5 mb-5'>
+      <div className='flex items-start justify-between gap-3 pb-3 border-b border-slate-100'>
+        <div className='flex items-center gap-2 flex-wrap'>
+          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800'>
+            {problem.exerciseNumber}
+          </span>
+          {problem.category && (
+            <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600'>
+              {problem.category}
+            </span>
+          )}
+        </div>
+        <button
+          onClick={() => speakBengaliText(problem.question)}
+          title='প্রশ্নটি বাংলায় শুনে নাও'
+          className='p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors'
+        >
+          <Volume2 className='w-4 h-4' />
+        </button>
+      </div>
+
+      <div className='my-4 text-slate-800 text-base md:text-lg font-medium leading-relaxed'>
+        {problem.question}
+      </div>
+
+      {problem.formulaUsed && (
+        <div className='mb-4 p-3 bg-amber-50/70 border border-amber-200/60 rounded-xl flex items-center gap-2 text-xs md:text-sm text-amber-900 font-medium'>
+          <BookOpen className='w-4 h-4 text-amber-600 shrink-0' />
+          <span>প্রয়োজনীয় সূত্র: <strong>{problem.formulaUsed}</strong></span>
+        </div>
+      )}
+
+      <form onSubmit={handleCheckAnswer} className='my-3 p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap items-center gap-2'>
+        <span className='text-xs md:text-sm text-slate-600 font-medium'>তোমার উত্তর:</span>
+        <input
+          type='text'
+          placeholder='যেমন: ১২০ বা ২৫'
+          value={userAttempt}
+          onChange={(e) => {
+            setUserAttempt(e.target.value);
+            setIsCorrect(null);
+          }}
+          className='px-3 py-1.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white min-w-[140px]'
+        />
+        <button
+          type='submit'
+          className='px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm font-medium rounded-lg transition-colors'
+        >
+          যাচাই করো
+        </button>
+        {isCorrect === true && (
+          <span className='text-emerald-600 font-semibold text-xs md:text-sm flex items-center gap-1'>
+            <CheckCircle2 className='w-4 h-4' /> দারুণ! সঠিক হয়েছে 🎉
+          </span>
+        )}
+        {isCorrect === false && (
+          <span className='text-rose-600 font-semibold text-xs md:text-sm'>
+            আবার চেষ্টা করো অথবা সমাধান দেখে নাও!
+          </span>
+        )}
+      </form>
+
+      <div className='flex flex-wrap items-center gap-2 pt-2'>
+        <button
+          onClick={() => setShowHint(!showHint)}
+          className='flex items-center gap-1.5 px-3 py-1.5 text-xs md:text-sm font-medium rounded-xl text-amber-800 bg-amber-100/70 hover:bg-amber-100 transition-colors'
+        >
+          <Lightbulb className='w-3.5 h-3.5 text-amber-600' />
+          {showHint ? 'ইঙ্গিত লুকাও' : '💡 ইঙ্গিত (Hint)'}
+        </button>
+
+        <button
+          onClick={() => setShowSolution(!showSolution)}
+          className='flex items-center gap-1.5 px-3.5 py-1.5 text-xs md:text-sm font-medium rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-sm ml-auto'
+        >
+          <span>{showSolution ? 'সমাধান সংক্ষেপ করো' : 'ধাপে ধাপে সম্পূর্ণ সমাধান'}</span>
+          {showSolution ? <ChevronUp className='w-4 h-4' /> : <ChevronDown className='w-4 h-4' />}
+        </button>
+      </div>
+
+      {showHint && (
+        <div className='mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs md:text-sm text-amber-900 leading-relaxed'>
+          <strong>💡 সমাধান সংকেত: </strong> {problem.hint}
+        </div>
+      )}
+
+      {showSolution && (
+        <div className='mt-4 pt-4 border-t border-slate-100 space-y-3'>
+          <div className='text-xs font-bold text-slate-500 uppercase tracking-wider'>ধাপে ধাপে সমাধান প্রক্রিয়া:</div>
+          <div className='space-y-2'>
+            {problem.steps.map((step, sIdx) => (
+              <div key={sIdx} className='flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs md:text-sm text-slate-700'>
+                <span className='flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs shrink-0 mt-0.5'>
+                  {step.stepNumber}
+                </span>
+                <div className='flex-1 space-y-1'>
+                  <p className='text-slate-800 font-medium'>{step.explanation}</p>
+                  {step.mathExpression && (
+                    <div className='p-2 bg-white rounded-lg border border-slate-200 font-mono text-emerald-800 text-sm font-semibold'>
+                      {step.mathExpression}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className='p-3.5 bg-emerald-50 border-2 border-emerald-500/30 rounded-xl flex items-center justify-between gap-2 text-emerald-950 font-bold text-sm md:text-base'>
+            <div className='flex items-center gap-2'>
+              <CheckCircle2 className='w-5 h-5 text-emerald-600 shrink-0' />
+              <span>উত্তর:</span>
+            </div>
+            <span className='px-3 py-1 bg-white rounded-lg border border-emerald-200 text-emerald-700 text-base'>
+              {problem.finalAnswer}
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
