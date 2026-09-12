@@ -54,12 +54,14 @@ const SYSTEM_TUTOR_PROMPT = `তুমি একজন অত্যন্ত স
 ১. সকল সংখ্যা ও অঙ্ক অবশ্যই বাংলায় (১, ২, ৩, ৪, ৫, ৬, ৭, ৮, ৯, ০) লিখবে।
 ২. উত্তর খুব দীর্ঘ বা জটিল না করে ধাপে ধাপে সহজ ভাষায় সমাধান করে দেখাবে।
 ৩. ৫ম শ্রেণির উপযোগী পদ্ধতি (যেমন: ঐকিক নিয়ম, ল.সা.গু, গ.সা.গু, সাধারণ ভগ্নাংশ, দশমিকের হিসাব, সহজ নিয়মে গুণ ও ভাগ) ব্যবহার করবে।
-৪. শিক্ষার্থীকে উৎসাহিত করবে এবং মিষ্টি ভাষায় বুঝিয়ে দেবে।`;
+৪. শিক্ষার্থীকে উৎসাহিত করবে এবং মিষ্টি ভাষায় বুঝিয়ে দেবে।
+৫. কোনো ধর্মীয় অভিবাদন (সালাম বা নমস্কার ইত্যাদি) দেবে না; শুধুমাত্র "স্বাগতম বন্ধু" বলে সম্বোধন করবে।`;
 
 export const callGroqChat = async (
   messages: ChatMessage[],
   temperature = 0.6,
-  model = 'openai/gpt-oss-120b'
+  model = 'openai/gpt-oss-120b',
+  max_tokens = 3000
 ): Promise<string> => {
   const apiKey = getGroqApiKey();
   if (!apiKey) {
@@ -76,7 +78,7 @@ export const callGroqChat = async (
       model,
       messages,
       temperature,
-      max_tokens: 1200,
+      max_tokens,
     }),
   });
 
@@ -175,9 +177,10 @@ export interface AiQuizItem {
 
 export const generateAiQuiz = async (
   chapterTitle: string,
-  difficulty: 'সহজ' | 'কঠিন' | 'এক্সপার্ট' = 'সহজ'
+  difficulty: 'সহজ' | 'কঠিন' | 'এক্সপার্ট' = 'সহজ',
+  count = 10
 ): Promise<AiQuizItem[]> => {
-  const prompt = `পঞ্চম শ্রেণির গণিত বইয়ের "${chapterTitle}" অধ্যায়ের উপর ৩টি ${difficulty} মানের বহুর্নির্বাচনী (MCQ) কুইজ প্রশ্ন তৈরি করো।
+  const prompt = `পঞ্চম শ্রেণির গণিত বইয়ের "${chapterTitle}" অধ্যায়ের উপর ${count}টি ${difficulty} মানের বহুর্নির্বাচনী (MCQ) কুইজ প্রশ্ন তৈরি করো।
 সব সংখ্যা ও বিকল্প অবশ্যই বাংলায় লেখো।
 
 ফলাফল অবশ্যই শুধুমাত্র একটি ভ্যালিড JSON অ্যারে দাও, কোনো ব্যাকটিক বা মার্কডাউন ছাড়া:
@@ -187,20 +190,6 @@ export const generateAiQuiz = async (
     "question": "১ নম্বর কুইজ প্রশ্ন বাংলায়?",
     "options": ["বিকল্প ১", "বিকল্প ২", "বিকল্প ৩", "বিকল্প ৪"],
     "correctIndex": 0,
-    "explanation": "সঠিক উত্তরের সহজ ব্যাখ্যা বাংলায়"
-  },
-  {
-    "id": "ai-2",
-    "question": "২ নম্বর কুইজ প্রশ্ন বাংলায়?",
-    "options": ["বিকল্প ১", "বিকল্প ২", "বিকল্প ৩", "বিকল্প ৪"],
-    "correctIndex": 1,
-    "explanation": "সঠিক উত্তরের সহজ ব্যাখ্যা বাংলায়"
-  },
-  {
-    "id": "ai-3",
-    "question": "৩ নম্বর কুইজ প্রশ্ন বাংলায়?",
-    "options": ["বিকল্প ১", "বিকল্প ২", "বিকল্প ৩", "বিকল্প ৪"],
-    "correctIndex": 2,
     "explanation": "সঠিক উত্তরের সহজ ব্যাখ্যা বাংলায়"
   }
 ]`;
@@ -236,23 +225,26 @@ export interface AiPracticeItem {
   explanation: string;
 }
 
-export const generatePracticeProblem = async (
+export const generatePracticeProblemSet = async (
   topic: string,
-  difficulty: 'সহজ' | 'কঠিন' | 'এক্সপার্ট' = 'সহজ'
-): Promise<AiPracticeItem> => {
-  const prompt = `পঞ্চম শ্রেণির গণিত বইয়ের "${topic}" বিষয়ে একটি ${difficulty} মানের অনুশীলন সমস্যা তৈরি করো।
+  difficulty: 'সহজ' | 'কঠিন' | 'এক্সপার্ট' = 'সহজ',
+  count = 10
+): Promise<AiPracticeItem[]> => {
+  const prompt = `পঞ্চম শ্রেণির গণিত বইয়ের "${topic}" বিষয়ে ${count}টি ${difficulty} মানের বৈচিত্র্যময় অনুশীলন সমস্যা তৈরি করো।
 সব সংখ্যা বাংলায় লেখো।
 
-ফলাফল শুধুমাত্র ভ্যালিড JSON অবজেক্ট দাও:
-{
-  "question": "সমস্যাটির স্পষ্ট প্রশ্ন বাংলায় (যেমন: ১২৫ × ৮ = কত?)",
-  "answer": "চূড়ান্ত সঠিক উত্তর (বাংলা অঙ্কে যেমন: ১০০০)",
-  "hint": "একটি ছোট্ট সমাধান সংকেত বাংলায়",
-  "explanation": "ধাপে ধাপে সহজ সমাধান বাংলায়"
-}`;
+ফলাফল শুধুমাত্র নিচের মতো ভ্যালিড JSON অ্যারে দাও:
+[
+  {
+    "question": "সমস্যাটির স্পষ্ট প্রশ্ন বাংলায় (যেমন: ১২৫ × ৮ = কত?)",
+    "answer": "চূড়ান্ত সঠিক উত্তর (বাংলা অঙ্কে যেমন: ১০০০)",
+    "hint": "একটি ছোট্ট সমাধান সংকেত বাংলায়",
+    "explanation": "ধাপে ধাপে সহজ সমাধান বাংলায়"
+  }
+]`;
 
   const messages: ChatMessage[] = [
-    { role: 'system', content: 'তুমি ৫ম শ্রেণির গণিত শিক্ষক। কেবল বিশুদ্ধ JSON অবজেক্ট দাও।' },
+    { role: 'system', content: 'তুমি ৫ম শ্রেণির গণিত শিক্ষক। কেবল বিশুদ্ধ JSON অ্যারে দাও।' },
     { role: 'user', content: prompt }
   ];
 
@@ -267,12 +259,20 @@ export const generatePracticeProblem = async (
   try {
     return JSON.parse(cleaned);
   } catch {
-    const match = cleaned.match(/\{[\s\S]*\}/);
+    const match = cleaned.match(/\[[\s\S]*\]/);
     if (match) {
       return JSON.parse(match[0]);
     }
     throw new Error('অনুশীলন সমস্যা তৈরিতে ত্রুটি হয়েছে।');
   }
+};
+
+export const generatePracticeProblem = async (
+  topic: string,
+  difficulty: 'সহজ' | 'কঠিন' | 'এক্সপার্ট' = 'সহজ'
+): Promise<AiPracticeItem> => {
+  const list = await generatePracticeProblemSet(topic, difficulty, 1);
+  return list[0];
 };
 
 export interface AiSolutionExplanation {
@@ -331,7 +331,7 @@ export const generateAiWorksheet = async (
   chapterTitle: string,
   chapterSummary: string,
   difficulty: 'সহজ' | 'কঠিন' | 'এক্সপার্ট' = 'সহজ',
-  count = 5
+  count = 10
 ): Promise<AiWorksheetItem[]> => {
   const prompt = `পঞ্চম শ্রেণির গণিত বইয়ের "${chapterTitle}" অধ্যায় থেকে হোমওয়ার্ক/পরীক্ষার জন্য ${count}টি ${difficulty} মানের ওয়ার্কশিট প্রশ্ন তৈরি করো।
 অধ্যায়ের সারসংক্ষেপ: "${chapterSummary}"

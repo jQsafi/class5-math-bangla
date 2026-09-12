@@ -12,7 +12,7 @@ export const WorksheetGenerator: React.FC<WorksheetProps> = ({ chapter }) => {
   const [mode, setMode] = useState<'textbook' | 'ai'>('ai');
   const [showAnswers, setShowAnswers] = useState(false);
   const [difficulty, setDifficulty] = useState<'সহজ' | 'কঠিন' | 'এক্সপার্ট'>('সহজ');
-  const [questionCount, setQuestionCount] = useState<number>(5);
+  const [questionCount, setQuestionCount] = useState<number>(10);
 
   // AI Worksheet State
   const [aiWorksheet, setAiWorksheet] = useState<AiWorksheetItem[]>([]);
@@ -130,7 +130,7 @@ export const WorksheetGenerator: React.FC<WorksheetProps> = ({ chapter }) => {
               <div className='flex items-center gap-2'>
                 <span className='text-xs font-bold text-emerald-950'>প্রশ্নের সংখ্যা:</span>
                 <div className='inline-flex bg-white rounded-xl p-1 border border-emerald-200 shadow-2xs'>
-                  {[5, 8, 10].map((cnt) => (
+                  {[10, 15, 20].map((cnt) => (
                     <button
                       key={cnt}
                       type='button'
