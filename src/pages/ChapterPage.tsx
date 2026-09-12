@@ -77,7 +77,7 @@ export const ChapterPage: React.FC<ChapterPageProps> = ({
             { id: 'solutions', label: '💡 সমাধানমালা (' + englishToBanglaDigits(chapter.exercises.length) + ')', icon: HelpCircle },
             { id: 'interactive', label: '🧮 ইন্টারেক্টিভ ল্যাব', icon: Sparkles },
             { id: 'quiz', label: '📝 কুইজ (' + englishToBanglaDigits(chapter.quiz.length) + ')', icon: Layers },
-            { id: 'worksheet', label: '🖨️ ওয়ার্কশিট', icon: Printer },
+            { id: 'worksheet', label: '🖨️ এআই ওয়ার্কশিট', icon: Printer },
             { id: 'ai_generator', label: '✨ এআই অনুশীলন তৈরি', icon: Bot }
           ].map((tab) => (
             <button
@@ -155,8 +155,16 @@ export const ChapterPage: React.FC<ChapterPageProps> = ({
       {/* Tab 2: Solutions */}
       {activeTab === 'solutions' && (
         <div className='space-y-4'>
-          <div className='p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-emerald-950 text-xs md:text-sm font-medium'>
-            💡 প্রতিটি প্রশ্নের সমাধান নিজে চেষ্টা করো অথবা সংকেত (Hint) দেখে সমাধান উন্মোচন করো।
+          <div className='p-4 md:p-5 bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 rounded-2xl border border-emerald-200/80 text-emerald-950 text-xs md:text-sm font-medium flex items-center justify-between gap-3 flex-wrap'>
+            <div className='flex items-center gap-2.5'>
+              <div className='w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs'>
+                <Sparkles className='w-4 h-4' />
+              </div>
+              <div>
+                <strong className='font-bold text-slate-900 block text-sm'>ইন্টারেক্টিভ এআই সমাধানমালা</strong>
+                <span className='text-slate-600 text-xs'>প্রতিটি অংকের সাথে রয়েছে ধাপে ধাপে সমাধান এবং "✨ এআই সহজ ব্যাখ্যা ও বিকল্প নিয়ম"।</span>
+              </div>
+            </div>
           </div>
           {chapter.exercises.map((prob, idx) => (
             <SolutionCard key={prob.id} problem={prob} index={idx} />

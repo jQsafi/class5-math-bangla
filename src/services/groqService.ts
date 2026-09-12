@@ -274,3 +274,100 @@ export const generatePracticeProblem = async (
     throw new Error('অনুশীলন সমস্যা তৈরিতে ত্রুটি হয়েছে।');
   }
 };
+
+export interface AiSolutionExplanation {
+  simpleExplanation: string;
+  alternativeMethod: string;
+  commonMistakeTip: string;
+}
+
+export const explainSolutionWithAi = async (
+  question: string,
+  answer: string
+): Promise<AiSolutionExplanation> => {
+  const prompt = `পঞ্চম শ্রেণির গণিত বইয়ের এই প্রশ্নটি একজন ৫ম শ্রেণির শিক্ষার্থীর জন্য আরও সহজ ভাষায় বুঝিয়ে দাও:
+প্রশ্ন: "${question}"
+উত্তর: "${answer}"
+
+ফলাফল শুধুমাত্র নিচের বিশুদ্ধ JSON ফরম্যাটে দাও (সব সংখ্যা বাংলায়):
+{
+  "simpleExplanation": "প্রশ্নটি খুব সহজ ও প্রাঞ্জল ভাষায় ৫ম শ্রেণির শিশুকে বুঝিয়ে বলো (২-৩ বাক্য)।",
+  "alternativeMethod": "অংকটি করার কোনো বিকল্প সহজ নিয়ম, শর্টকাট বা বৈকল্পিক পদ্ধতি বাংলায় লেখো।",
+  "commonMistakeTip": "শিক্ষার্থীরা এই ধরনের অংক করার সময় সাধারণত কী ভুল করে এবং কীভাবে তা এড়াবে তার পরামর্শ।"
+}`;
+
+  const messages: ChatMessage[] = [
+    { role: 'system', content: 'তুমি ৫ম শ্রেণির গণিত শিক্ষক। কেবল বিশুদ্ধ JSON দাও।' },
+    { role: 'user', content: prompt }
+  ];
+
+  const raw = await callGroqChat(messages, 0.4, 'openai/gpt-oss-120b');
+  let cleaned = raw.trim();
+  if (cleaned.startsWith('```json')) {
+    cleaned = cleaned.replace(/^```json/, '').replace(/```$/, '').trim();
+  } else if (cleaned.startsWith('```')) {
+    cleaned = cleaned.replace(/^```/, '').replace(/```$/, '').trim();
+  }
+
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (match) {
+      return JSON.parse(match[0]);
+    }
+    throw new Error('এআই ব্যাখ্যা তৈরিতে ত্রুটি হয়েছে।');
+  }
+};
+
+export interface AiWorksheetItem {
+  id: string;
+  question: string;
+  answer: string;
+  hint: string;
+}
+
+export const generateAiWorksheet = async (
+  chapterTitle: string,
+  chapterSummary: string,
+  difficulty: 'সহজ' | 'কঠিন' | 'এক্সপার্ট' = 'সহজ',
+  count = 5
+): Promise<AiWorksheetItem[]> => {
+  const prompt = `পঞ্চম শ্রেণির গণিত বইয়ের "${chapterTitle}" অধ্যায় থেকে হোমওয়ার্ক/পরীক্ষার জন্য ${count}টি ${difficulty} মানের ওয়ার্কশিট প্রশ্ন তৈরি করো।
+অধ্যায়ের সারসংক্ষেপ: "${chapterSummary}"
+সব সংখ্যা বাংলায় লেখো।
+
+ফলাফল শুধুমাত্র নিচের মতো ভ্যালিড JSON অ্যারে দাও:
+[
+  {
+    "id": "ws-1",
+    "question": "স্পষ্ট প্রশ্ন বাংলায়",
+    "answer": "চূড়ান্ত সঠিক উত্তর বাংলায়",
+    "hint": "ছোট্ট সংকেত"
+  }
+]`;
+
+  const messages: ChatMessage[] = [
+    { role: 'system', content: 'তুমি ৫ম শ্রেণির শিক্ষক। কেবল বিশুদ্ধ JSON অ্যারে তৈরি করো।' },
+    { role: 'user', content: prompt }
+  ];
+
+  const raw = await callGroqChat(messages, 0.4, 'openai/gpt-oss-120b');
+  let cleaned = raw.trim();
+  if (cleaned.startsWith('```json')) {
+    cleaned = cleaned.replace(/^```json/, '').replace(/```$/, '').trim();
+  } else if (cleaned.startsWith('```')) {
+    cleaned = cleaned.replace(/^```/, '').replace(/```$/, '').trim();
+  }
+
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    const match = cleaned.match(/\[[\s\S]*\]/);
+    if (match) {
+      return JSON.parse(match[0]);
+    }
+    throw new Error('ওয়ার্কশিট তৈরিতে ত্রুটি হয়েছে। অনুগ্রহ করে আবার চেষ্টা করো।');
+  }
+};
+

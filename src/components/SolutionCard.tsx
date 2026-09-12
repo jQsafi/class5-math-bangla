@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { ExerciseProblem } from '../types/math';
-import { Lightbulb, CheckCircle2, ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
+import { Lightbulb, CheckCircle2, ChevronDown, ChevronUp, BookOpen, Sparkles, Loader2, AlertTriangle } from 'lucide-react';
 import { englishToBanglaDigits } from '../utils/banglaUtils';
+import { explainSolutionWithAi, AiSolutionExplanation } from '../services/groqService';
 
 interface SolutionCardProps {
   problem: ExerciseProblem;
@@ -13,6 +14,28 @@ export const SolutionCard: React.FC<SolutionCardProps> = ({ problem, index }) =>
   const [showSolution, setShowSolution] = useState(false);
   const [userAttempt, setUserAttempt] = useState('');
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+  // AI explanation state
+  const [showAiExplanation, setShowAiExplanation] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiExplanation, setAiExplanation] = useState<AiSolutionExplanation | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
+
+  const handleToggleAiExplanation = async () => {
+    if (!showAiExplanation && !aiExplanation && !aiLoading) {
+      setAiLoading(true);
+      setAiError(null);
+      try {
+        const res = await explainSolutionWithAi(problem.question, problem.finalAnswer);
+        setAiExplanation(res);
+      } catch (err: any) {
+        setAiError(err?.message || 'এআই ব্যাখ্যা লোড করতে সমস্যা হয়েছে।');
+      } finally {
+        setAiLoading(false);
+      }
+    }
+    setShowAiExplanation(!showAiExplanation);
+  };
 
   const handleCheckAnswer = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,6 +116,18 @@ export const SolutionCard: React.FC<SolutionCardProps> = ({ problem, index }) =>
         </button>
 
         <button
+          onClick={handleToggleAiExplanation}
+          className='flex items-center gap-1.5 px-3 py-1.5 text-xs md:text-sm font-semibold rounded-xl text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition-colors'
+        >
+          {aiLoading ? (
+            <Loader2 className='w-3.5 h-3.5 animate-spin text-indigo-600' />
+          ) : (
+            <Sparkles className='w-3.5 h-3.5 text-indigo-600' />
+          )}
+          <span>{showAiExplanation ? 'এআই ব্যাখ্যা লুকাও' : '✨ এআই সহজ ব্যাখ্যা ও বিকল্প নিয়ম'}</span>
+        </button>
+
+        <button
           onClick={() => setShowSolution(!showSolution)}
           className='flex items-center gap-1.5 px-3.5 py-1.5 text-xs md:text-sm font-medium rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-sm ml-auto'
         >
@@ -104,6 +139,58 @@ export const SolutionCard: React.FC<SolutionCardProps> = ({ problem, index }) =>
       {showHint && (
         <div className='mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs md:text-sm text-amber-900 leading-relaxed'>
           <strong>💡 সমাধান সংকেত: </strong> {problem.hint}
+        </div>
+      )}
+
+      {showAiExplanation && (
+        <div className='mt-4 p-4 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-purple-50/50 border border-indigo-200/80 space-y-3.5 animate-in fade-in-50 duration-200'>
+          <div className='flex items-center justify-between border-b border-indigo-100/80 pb-2.5'>
+            <div className='flex items-center gap-2 text-xs md:text-sm font-bold text-indigo-950'>
+              <Sparkles className='w-4 h-4 text-indigo-600' />
+              <span>স্মার্ট এআই ব্যাখ্যা ও বিকল্প পদ্ধতি</span>
+            </div>
+            {aiLoading && (
+              <span className='text-xs text-indigo-600 flex items-center gap-1 font-medium'>
+                <Loader2 className='w-3 h-3 animate-spin' /> ব্যাখ্যা প্রস্তুত হচ্ছে...
+              </span>
+            )}
+          </div>
+
+          {aiError && (
+            <div className='p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2'>
+              <AlertTriangle className='w-4 h-4 text-rose-600 shrink-0' />
+              <span>{aiError}</span>
+            </div>
+          )}
+
+          {aiExplanation && (
+            <div className='space-y-3 text-xs md:text-sm'>
+              <div className='p-3 bg-white/90 rounded-xl border border-indigo-100 shadow-2xs'>
+                <div className='font-bold text-indigo-900 mb-1 flex items-center gap-1.5'>
+                  <span>💡 সহজ প্রাঞ্জল ব্যাখ্যা:</span>
+                </div>
+                <p className='text-slate-700 leading-relaxed'>{aiExplanation.simpleExplanation}</p>
+              </div>
+
+              {aiExplanation.alternativeMethod && (
+                <div className='p-3 bg-white/90 rounded-xl border border-purple-100 shadow-2xs'>
+                  <div className='font-bold text-purple-900 mb-1 flex items-center gap-1.5'>
+                    <span>🔄 বিকল্প সহজ নিয়ম / পদ্ধতি:</span>
+                  </div>
+                  <p className='text-slate-700 leading-relaxed'>{aiExplanation.alternativeMethod}</p>
+                </div>
+              )}
+
+              {aiExplanation.commonMistakeTip && (
+                <div className='p-3 bg-amber-50/90 rounded-xl border border-amber-200/80 text-amber-950'>
+                  <div className='font-bold text-amber-900 mb-1 flex items-center gap-1.5'>
+                    <span>⚠️ যে ভুলটি এড়িয়ে চলবে:</span>
+                  </div>
+                  <p className='text-slate-700 leading-relaxed'>{aiExplanation.commonMistakeTip}</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
