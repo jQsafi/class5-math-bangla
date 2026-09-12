@@ -10,6 +10,7 @@ interface NavbarProps {
   activeChapterId: number | null;
   chapters: Chapter[];
   onToggleSidebar: () => void;
+  onOpenAiTutor?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -19,7 +20,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onGoPractice,
   activeChapterId,
   chapters,
-  onToggleSidebar
+  onToggleSidebar,
+  onOpenAiTutor
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -119,11 +121,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={onOpenFormulaModal}
-            className='px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white flex items-center gap-1.5 text-xs font-bold shadow-sm shadow-emerald-600/20 transition-all'
+            className='px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 flex items-center gap-1.5 text-xs font-bold transition-all'
           >
-            <BookMarked className='w-4 h-4' />
+            <BookMarked className='w-4 h-4 text-emerald-600' />
             <span>সূত্র ভাণ্ডার</span>
           </button>
+
+          {onOpenAiTutor && (
+            <button
+              onClick={onOpenAiTutor}
+              className='px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white flex items-center gap-1.5 text-xs font-bold shadow-sm shadow-emerald-600/20 transition-all'
+            >
+              <Sparkles className='w-4 h-4 text-amber-300' />
+              <span>এআই শিক্ষক</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

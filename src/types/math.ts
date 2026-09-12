@@ -52,4 +52,4 @@ export interface Chapter {
   quiz: QuizQuestion[];
 }
 
-export type ActiveTab = 'theory' | 'solutions' | 'interactive' | 'quiz' | 'worksheet';
+export type ActiveTab = 'theory' | 'solutions' | 'interactive' | 'quiz' | 'worksheet' | 'ai_generator';

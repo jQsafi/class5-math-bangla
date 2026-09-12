@@ -6,11 +6,13 @@ import { HomePage } from './pages/HomePage';
 import { ChapterPage } from './pages/ChapterPage';
 import { FormulaSheetPage } from './pages/FormulaSheetPage';
 import { PracticePage } from './pages/PracticePage';
+import { AiTutorModal } from './components/AiTutorModal';
 
 export const App: React.FC = () => {
   const [activeChapterId, setActiveChapterId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState<'home' | 'chapter' | 'formulas' | 'practice'>('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [aiTutorOpen, setAiTutorOpen] = useState(false);
   const [completedChapters, setCompletedChapters] = useState<number[]>(() => {
     try {
       const saved = localStorage.getItem('class5_math_completed');
@@ -92,6 +94,7 @@ export const App: React.FC = () => {
         onGoHome={handleGoHome}
         onGoPractice={handleGoPractice}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+        onOpenAiTutor={() => setAiTutorOpen(true)}
       />
 
       <div className='flex-1 flex w-full max-w-7xl mx-auto'>
@@ -137,6 +140,12 @@ export const App: React.FC = () => {
           )}
         </main>
       </div>
+
+      <AiTutorModal
+        isOpen={aiTutorOpen}
+        onToggle={() => setAiTutorOpen(!aiTutorOpen)}
+        currentChapterTitle={activeChapter?.title}
+      />
     </div>
   );
 };

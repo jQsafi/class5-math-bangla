@@ -9,7 +9,8 @@ import { LcmGcdCalculator } from '../components/InteractiveWidgets/LcmGcdCalcula
 import { UnitTimeConverter } from '../components/InteractiveWidgets/UnitTimeConverter';
 import { BarChartBuilder } from '../components/InteractiveWidgets/BarChartBuilder';
 import { Class5Calculator } from '../components/InteractiveWidgets/Class5Calculator';
-import { BookOpen, CheckCircle, ChevronLeft, ChevronRight, HelpCircle, Sparkles, Printer, Layers } from 'lucide-react';
+import { AiProblemGenerator } from '../components/AiProblemGenerator';
+import { BookOpen, CheckCircle, ChevronLeft, ChevronRight, HelpCircle, Sparkles, Printer, Layers, Bot } from 'lucide-react';
 import { englishToBanglaDigits } from '../utils/banglaUtils';
 
 interface ChapterPageProps {
@@ -76,7 +77,8 @@ export const ChapterPage: React.FC<ChapterPageProps> = ({
             { id: 'solutions', label: '💡 সমাধানমালা (' + englishToBanglaDigits(chapter.exercises.length) + ')', icon: HelpCircle },
             { id: 'interactive', label: '🧮 ইন্টারেক্টিভ ল্যাব', icon: Sparkles },
             { id: 'quiz', label: '📝 কুইজ (' + englishToBanglaDigits(chapter.quiz.length) + ')', icon: Layers },
-            { id: 'worksheet', label: '🖨️ ওয়ার্কশিট', icon: Printer }
+            { id: 'worksheet', label: '🖨️ ওয়ার্কশিট', icon: Printer },
+            { id: 'ai_generator', label: '✨ এআই অনুশীলন তৈরি', icon: Bot }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -175,6 +177,14 @@ export const ChapterPage: React.FC<ChapterPageProps> = ({
       {/* Tab 5: Worksheet */}
       {activeTab === 'worksheet' && (
         <WorksheetGenerator chapter={chapter} />
+      )}
+
+      {/* Tab 6: AI Exercise Generator */}
+      {activeTab === 'ai_generator' && (
+        <AiProblemGenerator
+          chapterTitle={chapter.title}
+          chapterSummary={chapter.summary}
+        />
       )}
 
       {/* Bottom Navigation Pagination */}
