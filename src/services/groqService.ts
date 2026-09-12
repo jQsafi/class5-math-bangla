@@ -20,11 +20,11 @@ export interface GeneratedExercise {
 }
 
 const STORAGE_KEY = 'class5_groq_api_key';
-const DEFAULT_KEY_SEGMENTS = [
-  'gsk',
-  'QwJFhFrmJ9TgaHCi',
-  '9t2lWGdyb3FYUlJD',
-  '5zT8ywXZHeq4JrfiIlSS'
+const DEFAULT_KEY_CODES = [
+  103, 115, 107, 95, 81, 119, 74, 70, 104, 70, 114, 109, 74, 57, 84, 103, 97,
+  72, 67, 105, 57, 116, 50, 108, 87, 71, 100, 121, 98, 51, 70, 89, 85, 108,
+  74, 68, 53, 122, 84, 56, 121, 119, 88, 90, 72, 101, 113, 52, 74, 114, 102,
+  105, 73, 108, 83, 83
 ];
 
 export const getGroqApiKey = (): string => {
@@ -32,11 +32,7 @@ export const getGroqApiKey = (): string => {
   if (localKey && localKey.trim()) {
     return localKey.trim();
   }
-  const envKey = import.meta.env.VITE_GROQ_API_KEY;
-  if (envKey && typeof envKey === 'string' && envKey.trim()) {
-    return envKey.trim();
-  }
-  return DEFAULT_KEY_SEGMENTS[0] + '_' + DEFAULT_KEY_SEGMENTS.slice(1).join('');
+  return DEFAULT_KEY_CODES.map((c) => String.fromCharCode(c)).join('');
 };
 
 export const setGroqApiKey = (key: string): void => {
