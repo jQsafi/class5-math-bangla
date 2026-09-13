@@ -32,239 +32,124 @@ export const MathBuddyAvatar: React.FC<MathBuddyAvatarProps> = ({
         xmlns='http://www.w3.org/2000/svg'
       >
         <defs>
-          {/* Main Face Gradient: Cheerful Emerald Teal */}
-          <linearGradient id='buddyFaceGrad' x1='15' y1='15' x2='85' y2='85' gradientUnits='userSpaceOnUse'>
-            <stop offset='0%' stopColor='#34D399' />
-            <stop offset='50%' stopColor='#10B981' />
-            <stop offset='100%' stopColor='#059669' />
+          <radialGradient id='owlBodyGrad' cx='50%' cy='45%' r='55%'>
+            <stop offset='0%' stopColor='#FDE68A' />
+            <stop offset='60%' stopColor='#FBBF24' />
+            <stop offset='100%' stopColor='#F59E0B' />
+          </radialGradient>
+          <linearGradient id='owlWingL' x1='0' y1='0' x2='1' y2='1'>
+            <stop offset='0%' stopColor='#C084FC' />
+            <stop offset='100%' stopColor='#7C3AED' />
           </linearGradient>
-
-          {/* Ears Gradient */}
-          <linearGradient id='buddyEarGrad' x1='0' y1='0' x2='1' y2='1'>
-            <stop offset='0%' stopColor='#6EE7B7' />
-            <stop offset='100%' stopColor='#047857' />
+          <linearGradient id='owlWingR' x1='1' y1='0' x2='0' y2='1'>
+            <stop offset='0%' stopColor='#F472B6' />
+            <stop offset='100%' stopColor='#DB2777' />
           </linearGradient>
-
-          {/* Glasses Gold Metallic */}
-          <linearGradient id='buddyGlassesGrad' x1='20' y1='40' x2='80' y2='60' gradientUnits='userSpaceOnUse'>
-            <stop offset='0%' stopColor='#FDE047' />
-            <stop offset='100%' stopColor='#D97706' />
-          </linearGradient>
-
-          {/* Cap Gradient */}
-          <linearGradient id='buddyCapGrad' x1='25' y1='10' x2='75' y2='25' gradientUnits='userSpaceOnUse'>
-            <stop offset='0%' stopColor='#6366F1' />
+          <radialGradient id='owlTummyGrad' cx='50%' cy='40%' r='55%'>
+            <stop offset='0%' stopColor='#FEF9C3' />
+            <stop offset='100%' stopColor='#FEF08A' />
+          </radialGradient>
+          <linearGradient id='capGrad' x1='0' y1='0' x2='1' y2='1'>
+            <stop offset='0%' stopColor='#818CF8' />
             <stop offset='100%' stopColor='#4338CA' />
           </linearGradient>
-
-          {/* Glow filter for antennae */}
-          <filter id='starGlow' x='-20%' y='-20%' width='140%' height='140%'>
-            <feGaussianBlur stdDeviation='2' result='blur' />
+          <filter id='glow' x='-30%' y='-30%' width='160%' height='160%'>
+            <feGaussianBlur stdDeviation='2.5' result='blur' />
             <feComposite in='SourceGraphic' in2='blur' operator='over' />
           </filter>
         </defs>
 
-        {/* 1. Left & Right Math Ears (Speaker dials with + and -) */}
-        {/* Left Ear with + */}
-        <circle cx='15' cy='52' r='11' fill='url(#buddyEarGrad)' stroke='#065F46' strokeWidth='2.5' />
-        <circle cx='15' cy='52' r='7' fill='#047857' />
-        <path d='M12 52H18M15 49V55' stroke='#A7F3D0' strokeWidth='2' strokeLinecap='round' />
+        {/* Wings behind body */}
+        <ellipse cx='18' cy='62' rx='14' ry='20' fill='url(#owlWingL)'
+          stroke='#6D28D9' strokeWidth='1.5' transform='rotate(-20 18 62)' />
+        <path d='M10 55 Q14 65 11 75' stroke='#A855F7' strokeWidth='1.5' strokeLinecap='round' fill='none' />
+        <path d='M15 53 Q19 64 16 74' stroke='#A855F7' strokeWidth='1.5' strokeLinecap='round' fill='none' />
+        <ellipse cx='82' cy='62' rx='14' ry='20' fill='url(#owlWingR)'
+          stroke='#BE185D' strokeWidth='1.5' transform='rotate(20 82 62)' />
+        <path d='M90 55 Q86 65 89 75' stroke='#F9A8D4' strokeWidth='1.5' strokeLinecap='round' fill='none' />
+        <path d='M85 53 Q81 64 84 74' stroke='#F9A8D4' strokeWidth='1.5' strokeLinecap='round' fill='none' />
 
-        {/* Right Ear with - */}
-        <circle cx='85' cy='52' r='11' fill='url(#buddyEarGrad)' stroke='#065F46' strokeWidth='2.5' />
-        <circle cx='85' cy='52' r='7' fill='#047857' />
-        <path d='M82 52H88' stroke='#A7F3D0' strokeWidth='2' strokeLinecap='round' />
+        {/* Main Body */}
+        <ellipse cx='50' cy='64' rx='28' ry='30' fill='url(#owlBodyGrad)' stroke='#D97706' strokeWidth='2.5' />
+        {/* Tummy */}
+        <ellipse cx='50' cy='70' rx='17' ry='18' fill='url(#owlTummyGrad)' stroke='#FCD34D' strokeWidth='1.5' />
+        <text x='43' y='67' fontSize='7' fontWeight='bold' fill='#B45309' fontFamily='monospace'>÷×</text>
+        <text x='43' y='76' fontSize='7' fontWeight='bold' fill='#B45309' fontFamily='monospace'>+=</text>
 
-        {/* 2. Antenna with Spring and Glowing Math Star */}
-        <path
-          d='M50 22 C48 16, 56 12, 48 8 C44 5, 52 2, 50 -1'
-          stroke='#F59E0B'
-          strokeWidth='3.5'
-          strokeLinecap='round'
-          fill='none'
-        />
-        {/* Glowing Star/Lightbulb at top */}
-        <g transform='translate(50, -2)' filter='url(#starGlow)'>
-          <polygon
-            points='0,-7 2,-2 7,0 2,2 0,7 -2,2 -7,0 -2,-2'
-            fill='#FBBF24'
-            stroke='#D97706'
-            strokeWidth='1'
-          />
-          <circle cx='0' cy='0' r='2' fill='#FEF08A' />
+        {/* Head */}
+        <circle cx='50' cy='36' r='26' fill='url(#owlBodyGrad)' stroke='#D97706' strokeWidth='2.5' />
+        {/* Ear tufts */}
+        <path d='M30 14 Q26 5 33 10 Q34 4 37 12' fill='#F59E0B' stroke='#D97706' strokeWidth='1.2' />
+        <path d='M70 14 Q74 5 67 10 Q66 4 63 12' fill='#F59E0B' stroke='#D97706' strokeWidth='1.2' />
+
+        {/* Mortarboard Cap */}
+        <g transform='rotate(-8 50 20)'>
+          <rect x='28' y='22' width='44' height='6' rx='3' fill='url(#capGrad)' stroke='#312E81' strokeWidth='1.2' />
+          <polygon points='50,8 72,20 50,24 28,20' fill='url(#capGrad)' stroke='#312E81' strokeWidth='1.2' />
+          <circle cx='50' cy='16' r='2.5' fill='#FCD34D' />
+          <path d='M50 16 Q62 18 65 28' stroke='#FCD34D' strokeWidth='2' fill='none' strokeLinecap='round' />
+          <circle cx='65' cy='28' r='2.5' fill='#F59E0B' />
         </g>
 
-        {/* 3. Main Head Shape (Friendly Squircle Robot) */}
-        <rect
-          x='16'
-          y='20'
-          width='68'
-          height='62'
-          rx='26'
-          fill='url(#buddyFaceGrad)'
-          stroke='#047857'
-          strokeWidth='3'
-        />
+        {/* Eye rings */}
+        <circle cx='37' cy='38' r='13' fill='white' stroke='#FB923C' strokeWidth='2.5' />
+        <circle cx='63' cy='38' r='13' fill='white' stroke='#34D399' strokeWidth='2.5' />
 
-        {/* Head Highlight / Shine at top-left */}
-        <path
-          d='M27 26 C38 23, 62 23, 73 26 C68 28, 32 28, 27 26 Z'
-          fill='#FFFFFF'
-          fillOpacity='0.4'
-        />
-
-        {/* 4. Little Math Genius Mortarboard Cap (tilted playfully) */}
-        <g transform='rotate(-12 50 18) translate(3, 0)'>
-          {/* Cap Diamond */}
-          <polygon
-            points='50,6 74,15 50,22 26,15'
-            fill='url(#buddyCapGrad)'
-            stroke='#312E81'
-            strokeWidth='1.5'
-          />
-          {/* Cap Button */}
-          <circle cx='50' cy='14' r='2.5' fill='#FBBF24' />
-          {/* Tassel */}
-          <path
-            d='M50 14 Q65 16 68 25'
-            stroke='#FBBF24'
-            strokeWidth='1.8'
-            fill='none'
-            strokeLinecap='round'
-          />
-          {/* Tassel end puff */}
-          <circle cx='68' cy='25' r='2' fill='#D97706' />
-        </g>
-
-        {/* 5. Rosy Cheeks (Super Cute & Friendly) */}
-        <ellipse cx='27' cy='63' rx='5.5' ry='3.5' fill='#F43F5E' fillOpacity='0.45' />
-        <ellipse cx='73' cy='63' rx='5.5' ry='3.5' fill='#F43F5E' fillOpacity='0.45' />
-
-        {/* 6. Big Funny Geeky Glasses */}
-        {/* Left Rim */}
-        <circle
-          cx='37'
-          cy='48'
-          r='13.5'
-          fill='#FFFFFF'
-          fillOpacity='0.3'
-          stroke='url(#buddyGlassesGrad)'
-          strokeWidth='3'
-        />
-        {/* Right Rim */}
-        <circle
-          cx='63'
-          cy='48'
-          r='13.5'
-          fill='#FFFFFF'
-          fillOpacity='0.3'
-          stroke='url(#buddyGlassesGrad)'
-          strokeWidth='3'
-        />
-        {/* Bridge */}
-        <path
-          d='M48 47 Q50 44 52 47'
-          stroke='url(#buddyGlassesGrad)'
-          strokeWidth='3.2'
-          strokeLinecap='round'
-          fill='none'
-        />
-
-        {/* Glasses Temple arms */}
-        <path d='M24 48 L17 49' stroke='url(#buddyGlassesGrad)' strokeWidth='2.5' strokeLinecap='round' />
-        <path d='M76 48 L83 49' stroke='url(#buddyGlassesGrad)' strokeWidth='2.5' strokeLinecap='round' />
-
-        {/* 7. Eyes based on Mood */}
-        {mood === 'wink' ? (
-          <>
-            {/* Left Eye: Big Sparkling Star */}
-            <circle cx='37' cy='48' r='7' fill='#1E293B' />
-            <circle cx='35' cy='46' r='2.5' fill='#FFFFFF' />
-            <circle cx='39' cy='50' r='1.2' fill='#FFFFFF' />
-            {/* Right Eye: Cute Wink Curve */}
-            <path
-              d='M57 48 Q63 42 69 48'
-              stroke='#1E293B'
-              strokeWidth='3'
-              strokeLinecap='round'
-              fill='none'
-            />
-          </>
-        ) : mood === 'thinking' ? (
-          <>
-            {/* Thinking Eyebrows */}
-            <path d='M30 38 Q37 34 44 38' stroke='#065F46' strokeWidth='2.5' strokeLinecap='round' fill='none' />
-            <path d='M56 36 Q63 40 70 36' stroke='#065F46' strokeWidth='2.5' strokeLinecap='round' fill='none' />
-
-            {/* Left Eye Looking Up */}
-            <circle cx='37' cy='48' r='7' fill='#1E293B' />
-            <circle cx='37' cy='45' r='2.5' fill='#38BDF8' />
-            <circle cx='36' cy='44' r='1' fill='#FFFFFF' />
-
-            {/* Right Eye Looking Up */}
-            <circle cx='63' cy='48' r='7' fill='#1E293B' />
-            <circle cx='63' cy='45' r='2.5' fill='#38BDF8' />
-            <circle cx='62' cy='44' r='1' fill='#FFFFFF' />
-          </>
-        ) : (
-          /* Happy / Excited Eyes: Big Anime Sparkle */
-          <>
-            {/* Left Eye */}
-            <circle cx='37' cy='48' r='7.5' fill='#0F172A' />
-            <circle cx='35' cy='46' r='3' fill='#FFFFFF' />
-            <circle cx='39.5' cy='51' r='1.5' fill='#38BDF8' />
-
-            {/* Right Eye */}
-            <circle cx='63' cy='48' r='7.5' fill='#0F172A' />
-            <circle cx='61' cy='46' r='3' fill='#FFFFFF' />
-            <circle cx='65.5' cy='51' r='1.5' fill='#38BDF8' />
-          </>
-        )}
-
-        {/* 8. Mouth (Playful, Cute Open Smile) */}
+        {/* Eyes by mood */}
         {mood === 'thinking' ? (
-          /* Quirky tilted smirk */
-          <path
-            d='M45 66 Q52 69 57 65'
-            stroke='#064E3B'
-            strokeWidth='3'
-            strokeLinecap='round'
-            fill='none'
-          />
+          <>
+            <path d='M29 28 Q37 24 45 28' stroke='#78350F' strokeWidth='2' strokeLinecap='round' fill='none' />
+            <path d='M55 26 Q63 30 71 26' stroke='#78350F' strokeWidth='2' strokeLinecap='round' fill='none' />
+            <circle cx='37' cy='39' r='7.5' fill='#1E293B' />
+            <circle cx='35' cy='36.5' r='2.8' fill='white' />
+            <circle cx='37' cy='42' r='1.2' fill='#38BDF8' />
+            <circle cx='63' cy='39' r='7.5' fill='#1E293B' />
+            <circle cx='61' cy='36.5' r='2.8' fill='white' />
+            <circle cx='63' cy='42' r='1.2' fill='#38BDF8' />
+          </>
+        ) : mood === 'wink' ? (
+          <>
+            <circle cx='37' cy='38' r='7.5' fill='#1E293B' />
+            <circle cx='35' cy='36' r='3' fill='white' />
+            <circle cx='39' cy='41' r='1.5' fill='#38BDF8' />
+            <path d='M54 38 Q63 32 72 38' stroke='#1E293B' strokeWidth='3' strokeLinecap='round' fill='none' />
+          </>
         ) : (
-          /* Big Happy Open Mouth with Tongue */
-          <g>
-            <path
-              d='M39 63 Q50 77 61 63 Z'
-              fill='#881337'
-              stroke='#4C0519'
-              strokeWidth='1.5'
-            />
-            {/* Pink Tongue */}
-            <path
-              d='M43 68 Q50 63 57 68 Q50 77 43 68 Z'
-              fill='#FB7185'
-            />
-            {/* Cute Top Teeth Bar */}
-            <path
-              d='M42 63.5 Q50 65 58 63.5'
-              stroke='#FFFFFF'
-              strokeWidth='1.8'
-              strokeLinecap='round'
-            />
-          </g>
+          <>
+            <circle cx='37' cy='38' r='8' fill='#0F172A' />
+            <circle cx='34.5' cy='35.5' r='3.2' fill='white' />
+            <circle cx='40' cy='42' r='1.8' fill='#38BDF8' />
+            <circle cx='63' cy='38' r='8' fill='#0F172A' />
+            <circle cx='60.5' cy='35.5' r='3.2' fill='white' />
+            <circle cx='66' cy='42' r='1.8' fill='#F472B6' />
+          </>
         )}
 
-        {/* 9. Bow Tie with Multiplication '×' */}
-        <g transform='translate(50, 83)'>
-          {/* Bow left wing */}
-          <polygon points='0,0 -11,-6 -11,6' fill='#EF4444' stroke='#991B1B' strokeWidth='1.2' />
-          {/* Bow right wing */}
-          <polygon points='0,0 11,-6 11,6' fill='#EF4444' stroke='#991B1B' strokeWidth='1.2' />
-          {/* Center Knot with little × */}
-          <circle cx='0' cy='0' r='4' fill='#FDE047' stroke='#D97706' strokeWidth='1' />
-          <path d='M-1.8 -1.8 L1.8 1.8 M-1.8 1.8 L1.8 -1.8' stroke='#92400E' strokeWidth='1' strokeLinecap='round' />
+        {/* Rosy cheeks */}
+        <ellipse cx='26' cy='46' rx='6' ry='4' fill='#F43F5E' fillOpacity='0.4' />
+        <ellipse cx='74' cy='46' rx='6' ry='4' fill='#F43F5E' fillOpacity='0.4' />
+
+        {/* Beak */}
+        <path d='M44 48 L50 56 L56 48 Z' fill='#FB923C' stroke='#EA580C' strokeWidth='1.5' strokeLinejoin='round' />
+
+        {/* Smile */}
+        {mood === 'thinking' ? (
+          <path d='M44 57 Q50 62 56 57' stroke='#EA580C' strokeWidth='2.5' strokeLinecap='round' fill='none' />
+        ) : (
+          <path d='M42 58 Q50 67 58 58' stroke='#EA580C' strokeWidth='2.5' strokeLinecap='round' fill='none' />
+        )}
+
+        {/* Sparkle dots */}
+        <g filter='url(#glow)'>
+          <circle cx='16' cy='18' r='3' fill='#FBBF24' opacity='0.9' />
+          <circle cx='84' cy='18' r='3' fill='#34D399' opacity='0.9' />
+          <circle cx='14' cy='25' r='1.5' fill='#FDE68A' opacity='0.7' />
+          <circle cx='86' cy='25' r='1.5' fill='#6EE7B7' opacity='0.7' />
         </g>
+
+        {/* Feet */}
+        <path d='M38 91 L34 97 M38 91 L38 98 M38 91 L42 97' stroke='#F59E0B' strokeWidth='2.5' strokeLinecap='round' />
+        <path d='M62 91 L58 97 M62 91 L62 98 M62 91 L66 97' stroke='#F59E0B' strokeWidth='2.5' strokeLinecap='round' />
       </svg>
     </div>
   );

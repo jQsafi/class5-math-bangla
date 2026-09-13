@@ -30,7 +30,52 @@ interface AiTutorModalProps {
   onToggle?: () => void;
 }
 
+// ── Math pre-processing ──────────────────────────────────────────────────────
+// The AI sometimes uses \[...\] or [ \frac ] (square brackets) for display math
+// instead of $$...$$, and \(...\) for inline math instead of $...$.
+// KaTeX also can't render Bengali digits — convert them to Western inside math.
+const BANGLA_TO_WESTERN: Record<string, string> = {
+  '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4',
+  '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9',
+};
+
+function westernizeInsideMath(expr: string): string {
+  return expr.replace(/[০-৯]/g, (ch) => BANGLA_TO_WESTERN[ch] ?? ch);
+}
+
+export function preprocessMathContent(text: string): string {
+  // 1. \[...\]  →  $$...$$
+  text = text.replace(/\\\[\s*([\s\S]*?)\s*\\\]/g, (_m, inner) =>
+    `$$${westernizeInsideMath(inner.trim())}$$`
+  );
+
+  // 2. \(...\)  →  $...$
+  text = text.replace(/\\\(\s*([\s\S]*?)\s*\\\)/g, (_m, inner) =>
+    `$${westernizeInsideMath(inner.trim())}$`
+  );
+
+  // 3. Lone [ \frac{...}... ] lines (square bracket display math from AI)
+  //    Match lines that start with optional whitespace + [ and end with ]
+  text = text.replace(/^\s*\[\s*(\\[a-zA-Z][\s\S]*?)\s*\]\s*$/gm, (_m, inner) =>
+    `$$${westernizeInsideMath(inner.trim())}$$`
+  );
+
+  // 4. Westernize digits inside already-correct $$ ... $$ blocks
+  text = text.replace(/\$\$([\s\S]*?)\$\$/g, (_m, inner) =>
+    `$$${westernizeInsideMath(inner)}$$`
+  );
+
+  // 5. Westernize digits inside inline $ ... $ blocks
+  text = text.replace(/\$([^$\n]+?)\$/g, (_m, inner) =>
+    `$${westernizeInsideMath(inner)}$`
+  );
+
+  return text;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const MarkdownMessage: React.FC<{ content: string; isBot: boolean }> = ({ content, isBot }) => {
+  const processed = isBot ? preprocessMathContent(content) : content;
   return (
     <div className={`space-y-1 font-bangla ${isBot ? 'text-slate-800' : 'text-white'}`}>
       <ReactMarkdown
@@ -126,9 +171,12 @@ export const MarkdownMessage: React.FC<{ content: string; isBot: boolean }> = ({
               {children}
             </td>
           ),
-          code: ({ className, children, ...props }) => {
-            const isCodeBlock = className && className.includes('language-');
-            if (isCodeBlock) {
+          code: ({ node, children, ...props }) => {
+            // In react-markdown v10, inline code has no parent <pre>; block code does.
+            const isBlock = node?.position && node.data && (node.data as any).isBlock;
+            const parentName = (node as any)?.parent?.tagName;
+            const isInPre = parentName === 'pre';
+            if (isInPre) {
               return (
                 <code className='block p-2.5 text-xs font-mono overflow-x-auto whitespace-pre rounded-lg bg-slate-900 text-emerald-300' {...props}>
                   {children}
@@ -165,7 +213,7 @@ export const MarkdownMessage: React.FC<{ content: string; isBot: boolean }> = ({
           ),
         }}
       >
-        {content}
+        {processed}
       </ReactMarkdown>
     </div>
   );
@@ -388,7 +436,7 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
 
                     {msg.role === 'assistant' && (
                       <div className='mt-2 pt-2 border-t border-slate-100 flex items-center justify-between'>
-                        <span className='text-[10px] text-slate-400'>গণিত শিক্ষক</span>
+                        <span className='text-[10px] text-slate-400'>গণিত বন্ধু ✨</span>
                       </div>
                     )}
                   </div>
