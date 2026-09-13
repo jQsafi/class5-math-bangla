@@ -11,6 +11,10 @@ import {
   RotateCcw,
   Check
 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import {
   ChatMessage,
   askMathTutor,
@@ -18,12 +22,154 @@ import {
   setGroqApiKey,
   hasGroqApiKey
 } from '../services/groqService';
+import { MathBuddyAvatar } from './MathBuddyAvatar';
 
 interface AiTutorModalProps {
   currentChapterTitle?: string;
   isOpen?: boolean;
   onToggle?: () => void;
 }
+
+export const MarkdownMessage: React.FC<{ content: string; isBot: boolean }> = ({ content, isBot }) => {
+  return (
+    <div className={`space-y-1 font-bangla ${isBot ? 'text-slate-800' : 'text-white'}`}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkMath]}
+        rehypePlugins={[rehypeKatex]}
+        components={{
+          h1: ({ children }) => (
+            <h2 className={`font-extrabold text-base sm:text-lg mt-3 mb-1.5 ${isBot ? 'text-emerald-950 border-b border-emerald-100 pb-1' : 'text-white'}`}>
+              {children}
+            </h2>
+          ),
+          h2: ({ children }) => (
+            <h3 className={`font-bold text-sm sm:text-base mt-2.5 mb-1 ${isBot ? 'text-emerald-900 border-b border-emerald-50 pb-0.5' : 'text-white'}`}>
+              {children}
+            </h3>
+          ),
+          h3: ({ children }) => (
+            <h4 className={`font-bold text-xs sm:text-sm mt-2 mb-1 ${isBot ? 'text-emerald-800' : 'text-white'}`}>
+              {children}
+            </h4>
+          ),
+          p: ({ children }) => (
+            <p className='text-xs sm:text-sm leading-relaxed my-1'>
+              {children}
+            </p>
+          ),
+          strong: ({ children }) => (
+            <strong className={`font-bold ${isBot ? 'text-slate-900' : 'text-white'}`}>
+              {children}
+            </strong>
+          ),
+          em: ({ children }) => (
+            <em className={`italic ${isBot ? 'text-slate-700' : 'text-emerald-100'}`}>
+              {children}
+            </em>
+          ),
+          ul: ({ children }) => (
+            <ul className={`list-disc list-outside ml-4 my-1.5 space-y-1 text-xs sm:text-sm ${isBot ? 'text-slate-800 marker:text-emerald-600' : 'text-white marker:text-emerald-200'}`}>
+              {children}
+            </ul>
+          ),
+          ol: ({ children }) => (
+            <ol className={`list-decimal list-outside ml-4 my-1.5 space-y-1 text-xs sm:text-sm ${isBot ? 'text-slate-800 marker:font-bold marker:text-emerald-700' : 'text-white marker:text-emerald-200'}`}>
+              {children}
+            </ol>
+          ),
+          li: ({ children }) => (
+            <li className='pl-0.5 leading-relaxed'>
+              {children}
+            </li>
+          ),
+          blockquote: ({ children }) => (
+            <blockquote className={`my-2 pl-3 py-1 border-l-3 rounded-r-lg text-xs sm:text-sm italic ${
+              isBot
+                ? 'border-emerald-500 bg-emerald-50/70 text-emerald-950'
+                : 'border-white/60 bg-white/10 text-white'
+            }`}>
+              {children}
+            </blockquote>
+          ),
+          hr: () => (
+            <hr className={`my-2.5 border-t ${isBot ? 'border-slate-200' : 'border-white/20'}`} />
+          ),
+          table: ({ children }) => (
+            <div className='my-2 overflow-x-auto rounded-xl border border-slate-200 shadow-xs'>
+              <table className='w-full text-left text-xs border-collapse'>
+                {children}
+              </table>
+            </div>
+          ),
+          thead: ({ children }) => (
+            <thead className={isBot ? 'bg-emerald-50 text-emerald-950 font-bold border-b border-emerald-100' : 'bg-white/20 text-white font-bold'}>
+              {children}
+            </thead>
+          ),
+          tbody: ({ children }) => (
+            <tbody className={`divide-y ${isBot ? 'divide-slate-100 bg-white' : 'divide-white/10'}`}>
+              {children}
+            </tbody>
+          ),
+          tr: ({ children }) => (
+            <tr className={isBot ? 'hover:bg-slate-50/80 transition-colors' : 'hover:bg-white/5 transition-colors'}>
+              {children}
+            </tr>
+          ),
+          th: ({ children }) => (
+            <th className='px-3 py-2 font-bold whitespace-nowrap'>
+              {children}
+            </th>
+          ),
+          td: ({ children }) => (
+            <td className={`px-3 py-1.5 ${isBot ? 'text-slate-700' : 'text-emerald-50'}`}>
+              {children}
+            </td>
+          ),
+          code: ({ className, children, ...props }) => {
+            const isCodeBlock = className && className.includes('language-');
+            if (isCodeBlock) {
+              return (
+                <code className='block p-2.5 text-xs font-mono overflow-x-auto whitespace-pre rounded-lg bg-slate-900 text-emerald-300' {...props}>
+                  {children}
+                </code>
+              );
+            }
+            return (
+              <code
+                className={
+                  isBot
+                    ? 'px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 font-mono text-xs border border-emerald-100'
+                    : 'px-1.5 py-0.5 rounded bg-white/20 text-white font-mono text-xs'
+                }
+                {...props}
+              >
+                {children}
+              </code>
+            );
+          },
+          pre: ({ children }) => (
+            <div className='my-2 overflow-hidden rounded-lg'>
+              {children}
+            </div>
+          ),
+          a: ({ href, children }) => (
+            <a
+              href={href}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={isBot ? 'text-emerald-600 hover:text-emerald-800 underline font-medium' : 'text-white underline font-medium'}
+            >
+              {children}
+            </a>
+          ),
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+};
 
 const DEFAULT_QUESTIONS = [
   'সহজ পদ্ধতিতে গুণ কীভাবে করে?',
@@ -126,18 +272,27 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
   return (
     <>
       {/* Floating Action Button */}
-      <div className='fixed bottom-6 right-6 z-40 no-print'>
+      {/* Mobile: bottom-left, icon-only circle — avoids overlapping Next/Prev chapter buttons at bottom-right */}
+      {/* Desktop (sm+): bottom-right, full labeled pill */}
+      <div className='fixed bottom-6 left-4 sm:left-auto sm:right-6 z-40 no-print'>
         <button
           onClick={toggleOpen}
           aria-label='গণিত বন্ধু এআই শিক্ষক'
-          className='flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-full shadow-xl hover:shadow-emerald-600/30 transition-all transform hover:scale-105 active:scale-95 group font-bold text-sm'
+          className='flex items-center gap-3 sm:pl-3 sm:pr-5 p-2.5 sm:py-2.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-full shadow-2xl hover:shadow-emerald-600/40 transition-all transform hover:scale-105 active:scale-95 group font-bold text-sm border-2 border-emerald-400/40 backdrop-blur-sm'
         >
-          <span className='relative flex h-3.5 w-3.5'>
-            <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75'></span>
-            <span className='relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-400'></span>
-          </span>
-          <Sparkles className='w-4 h-4 text-amber-300 group-hover:rotate-12 transition-transform' />
-          <span>গণিত শিক্ষক (AI)</span>
+          <div className='relative'>
+            <span className='animate-ping absolute -top-0.5 -right-0.5 inline-flex h-3 w-3 rounded-full bg-amber-400 opacity-80'></span>
+            <span className='absolute -top-0.5 -right-0.5 inline-flex rounded-full h-3 w-3 bg-amber-400 border-2 border-emerald-700'></span>
+            <MathBuddyAvatar size={36} animated={true} mood='excited' className='group-hover:rotate-6 transition-transform' />
+          </div>
+          {/* Text label hidden on mobile to keep the button compact */}
+          <div className='hidden sm:flex flex-col items-start leading-tight text-left'>
+            <div className='flex items-center gap-1.5'>
+              <span className='text-sm font-black tracking-wide'>গণিত বন্ধু</span>
+              <span className='text-[10px] bg-amber-400 text-slate-900 px-1.5 py-0.5 rounded-full font-black uppercase tracking-wider'>AI</span>
+            </div>
+            <span className='text-[10px] text-emerald-100/90 font-medium'>যে কোনো অংক জিজ্ঞেস করো! 📐✨</span>
+          </div>
         </button>
       </div>
 
@@ -151,8 +306,8 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
             {/* Header */}
             <div className='p-4 bg-gradient-to-r from-emerald-700 to-teal-800 text-white flex items-center justify-between shrink-0 shadow-sm'>
               <div className='flex items-center gap-3'>
-                <div className='w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 text-emerald-200 shadow-inner'>
-                  <Bot className='w-6 h-6' />
+                <div className='w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20 text-emerald-200 shadow-inner p-1'>
+                  <MathBuddyAvatar size={42} mood='happy' animated={true} />
                 </div>
                 <div>
                   <div className='flex items-center gap-2'>
@@ -217,8 +372,8 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
                   }`}
                 >
                   {msg.role === 'assistant' && (
-                    <div className='w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs mt-1'>
-                      <Bot className='w-4 h-4' />
+                    <div className='w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-50 border border-emerald-200/90 flex items-center justify-center shrink-0 shadow-xs mt-0.5 p-0.5'>
+                      <MathBuddyAvatar size={32} mood='happy' />
                     </div>
                   )}
 
@@ -229,11 +384,11 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
                         : 'bg-white border border-slate-200/80 text-slate-800 rounded-bl-xs'
                     }`}
                   >
-                    <div className='whitespace-pre-wrap'>{msg.content}</div>
+                    <MarkdownMessage content={msg.content} isBot={msg.role === 'assistant'} />
 
                     {msg.role === 'assistant' && (
                       <div className='mt-2 pt-2 border-t border-slate-100 flex items-center justify-between'>
-                        <span className='text-[10px] text-slate-400'>NCTB গণিত শিক্ষক</span>
+                        <span className='text-[10px] text-slate-400'>গণিত শিক্ষক</span>
                       </div>
                     )}
                   </div>
@@ -248,12 +403,12 @@ export const AiTutorModal: React.FC<AiTutorModalProps> = ({
 
               {loading && (
                 <div className='flex gap-3 justify-start'>
-                  <div className='w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-1 animate-pulse'>
-                    <Bot className='w-4 h-4' />
+                  <div className='w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-100 to-amber-50 border border-emerald-200 flex items-center justify-center shrink-0 mt-0.5 p-0.5 animate-bounce'>
+                    <MathBuddyAvatar size={32} mood='thinking' />
                   </div>
-                  <div className='bg-white border border-slate-200 rounded-2xl p-3.5 text-xs text-slate-500 rounded-bl-xs flex items-center gap-2'>
+                  <div className='bg-white border border-slate-200 rounded-2xl p-3.5 text-xs text-slate-600 rounded-bl-xs flex items-center gap-2 shadow-xs'>
                     <span className='animate-spin inline-block w-4 h-4 border-2 border-emerald-600 border-t-transparent rounded-full'></span>
-                    <span>গণিত বন্ধু চিন্তা করছে ও সমাধান সাজাচ্ছে...</span>
+                    <span className='font-medium'>গণিত বন্ধু চিন্তা করছে ও সমাধান সাজাচ্ছে... 🤔📐</span>
                   </div>
                 </div>
               )}

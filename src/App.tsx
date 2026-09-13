@@ -175,6 +175,27 @@ export const App: React.FC = () => {
         </main>
       </div>
 
+      {/* Footer / Copyright Section */}
+      <footer className='border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500 font-bangla space-y-2 mt-12 no-print'>
+        <p className='font-semibold text-slate-700'>
+          পঞ্চম শ্রেণি গণিত পাঠশালা • সম্পূর্ণ সমাধানমালা ও এআই গণিত বন্ধু
+        </p>
+        <div className='pt-2 border-t border-slate-100 max-w-lg mx-auto flex items-center justify-center gap-1.5 text-slate-600 flex-wrap'>
+          <span>পরিকল্পনা ও কারিগরি সহায়তায়:</span>
+          <a
+            href='https://jqsafi.github.io/'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='font-bold text-emerald-700 hover:text-emerald-900 underline underline-offset-2 transition-colors font-sans'
+          >
+            Shafayat Hossain
+          </a>
+        </div>
+        <p className='text-[11px] text-slate-400'>
+          © {new Date().getFullYear()} সর্বস্বত্ব সংরক্ষিত • শিক্ষা ও জনকল্যাণে উন্মুক্ত
+        </p>
+      </footer>
+
       <AiTutorModal
         isOpen={aiTutorOpen}
         onToggle={() => setAiTutorOpen(!aiTutorOpen)}

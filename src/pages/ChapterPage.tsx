@@ -43,7 +43,7 @@ export const ChapterPage: React.FC<ChapterPageProps> = ({
   };
 
   return (
-    <div className='max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8'>
+    <div className='max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 sm:pb-8 space-y-8'>
       {/* Chapter Top Header Card */}
       <div className='bg-white rounded-3xl border border-slate-200/80 p-6 md:p-8 shadow-xs space-y-4'>
         <div className='flex items-center justify-between flex-wrap gap-4'>

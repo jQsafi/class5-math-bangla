@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BookOpen, Search, Menu, Sparkles, BookMarked, Home, ChevronRight } from 'lucide-react';
 import { Chapter } from '../types/math';
+import { MathBuddyAvatar } from './MathBuddyAvatar';
 
 interface NavbarProps {
   onSelectChapter: (id: number) => void;
@@ -130,10 +131,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           {onOpenAiTutor && (
             <button
               onClick={onOpenAiTutor}
-              className='px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white flex items-center gap-1.5 text-xs font-bold shadow-sm shadow-emerald-600/20 transition-all'
+              className='px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white flex items-center gap-2 text-xs font-bold shadow-sm shadow-emerald-600/20 transition-all hover:scale-105 group'
             >
-              <Sparkles className='w-4 h-4 text-amber-300' />
-              <span>এআই শিক্ষক</span>
+              <MathBuddyAvatar size={22} mood='wink' animated={true} className='group-hover:rotate-12 transition-transform' />
+              <span>গণিত বন্ধু</span>
+              <span className='text-[9px] bg-amber-400 text-slate-900 px-1 py-0.2 rounded font-black uppercase'>AI</span>
             </button>
           )}
         </div>
