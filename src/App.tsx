@@ -46,6 +46,40 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
+  // Update document title and track page views in Google Analytics
+  useEffect(() => {
+    let title = 'পঞ্চম শ্রেণি গণিত পাঠশালা - সম্পূর্ণ সমাধানমালা, কুইজ ও এআই গণিত শিক্ষক';
+    if (currentPage === 'chapter' && activeChapterId) {
+      const ch = chaptersData.find(c => c.id === activeChapterId);
+      if (ch) {
+        title = `${ch.title} - ৫ম শ্রেণি গণিত পাঠশালা`;
+      }
+    } else if (currentPage === 'formulas') {
+      title = 'প্রয়োজনীয় সূত্র ও নিয়মাবলী - ৫ম শ্রেণি গণিত পাঠশালা';
+    } else if (currentPage === 'practice') {
+      title = 'অনুশীলন ল্যাব ও কুইজ - ৫ম শ্রেণি গণিত পাঠশালা';
+    }
+    document.title = title;
+
+    if (typeof window !== 'undefined') {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'page_view', {
+          page_title: title,
+          page_path: window.location.pathname + window.location.hash,
+          page_location: window.location.href,
+        });
+      }
+      if (Array.isArray(window.dataLayer)) {
+        window.dataLayer.push({
+          event: 'pageview',
+          page_title: title,
+          page_path: window.location.pathname + window.location.hash,
+          page_location: window.location.href,
+        });
+      }
+    }
+  }, [currentPage, activeChapterId]);
+
   const handleSelectChapter = (id: number) => {
     setActiveChapterId(id);
     setCurrentPage('chapter');

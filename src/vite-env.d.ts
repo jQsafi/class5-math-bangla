@@ -7,3 +7,8 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface Window {
+  dataLayer?: any[];
+  gtag?: (...args: any[]) => void;
+}
